@@ -6,7 +6,7 @@ import { createPinia } from "pinia";
 import App from "./App.vue";
 import router from "./router";
 import { definePreset } from "@primeuix/themes";
-import { colorScheme } from "@primeuix/themes/aura/autocomplete";
+import "./assets/main.css";
 
 const app = createApp(App);
 
