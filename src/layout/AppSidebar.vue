@@ -1,3 +1,23 @@
+<script setup lang="ts">
+import { ref } from "vue";
+import { useRoute } from "vue-router";
+
+const route = useRoute();
+
+const menuItems = ref([
+  {
+    label: "General",
+    items: [
+      {
+        icon: "pi pi-th-large",
+        to: "/",
+        label: "Dashboard",
+      },
+    ],
+  },
+]);
+</script>
+
 <template>
   <div
     class="fixed left-0 top-0 h-full w-64 bg-white border-surface-200 flex flex-col z-50 transition-all duration-300"
@@ -10,6 +30,53 @@
         <i class="pi pi-bolt text-lg"></i>
       </div>
       <span class="text-xl font-bold text-surface-900">BWA POS</span>
+    </div>
+    <!-- Menu -->
+    <div class="flex-1 flex-col gap-6 overflow-y-auto py-6 px-4">
+      <div class="" v-for="(section, i) in menuItems" :key="i">
+        <div
+          class="text-xs font-semibold text-surface-400 uppercase tracking-wider mb-3 px-3"
+        >
+          {{ section.label }}
+        </div>
+        <div class="flex flex-col gap-1">
+          <router-link
+            v-for="(item, i) in section.items"
+            :key="i"
+            :to="item.to"
+            class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors duration-200"
+            :class="[
+              route.path === item.to
+                ? 'bg-surface-100 text-primary-600'
+                : 'text-surface-900 hover:bg-surface-100',
+            ]"
+          >
+            <i :class="[item.icon, 'text-lg']"></i>
+            <span class="font-medium text-sm">{{ item.label }}</span>
+          </router-link>
+        </div>
+      </div>
+    </div>
+    <!-- User Profile -->
+    <div class="p-4 border-t border-surface-200">
+      <div
+        class="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-surface-50"
+      >
+        <div
+          class="w-9 h-9 rounded-full bg-surface-200 flex items-center justify-center overflow-hidden"
+        >
+          <i class="pi pi-user text-lg text-surface-600"></i>
+        </div>
+        <div class="text-left">
+          <div class="text-sm font-semibold text-surface-900">Admin</div>
+          <div class="text-xs text-surface-500">admin@example.com</div>
+        </div>
+        <div
+          class="ml-auto w-8 h-8 rounded-lg flex items-center justify-center text-surface-400 group-hover:bg-red-100 group-hover:text-red-600 transition-all"
+        >
+          <i class="pi pi-sign-out text-lg"></i>
+        </div>
+      </div>
     </div>
   </div>
 </template>
