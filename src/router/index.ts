@@ -11,7 +11,7 @@ const router = createRouter({
       path: "/login",
       name: "login",
       component: Login,
-      meta: { guest: false },
+      meta: { guest: true },
     },
     {
       path: "/",
@@ -44,7 +44,7 @@ router.beforeEach(async (to, from, next) => {
   if (to.meta.requiresAuth && !auth.isAuthenticated) {
     return next("/login");
   }
-
+  console.log(to.meta.guest, auth.isAuthenticated);
   if (to.meta.guest && auth.isAuthenticated) {
     return next("/");
   }

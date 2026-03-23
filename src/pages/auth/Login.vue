@@ -1,11 +1,43 @@
 <script setup lang="ts">
-import { Button, InputText } from "primevue";
-import { reactive } from "vue";
+import router from "@/router";
+import { useAuthStore } from "@/stores/auth.store";
+import { storeToRefs } from "pinia";
+import { Button, InputText, Message } from "primevue";
+import { reactive, ref } from "vue";
 
-const form = reactive({
+const auth = useAuthStore();
+const { loading } = storeToRefs(auth);
+
+const error = ref<string | null>("");
+const form = ref({
   email: "",
   password: "",
 });
+
+async function login() {
+  if (!form.value.email || !form.value.password) {
+    error.value = "Email and password are required.";
+    return;
+  }
+
+  error.value = null;
+
+  try {
+    await auth.login(form.value.email, form.value.password);
+
+    router.push("/");
+  } catch (err) {
+    if (err !== null) {
+      if (typeof err === "object" && "message" in err) {
+        error.value = err.message as string;
+      } else {
+        error.value = "An unexpected error occurred. Please try again.";
+      }
+    } else {
+      error.value = "An unexpected error occurred. Please try again.";
+    }
+  }
+}
 </script>
 
 <template>
@@ -26,7 +58,14 @@ const form = reactive({
           </h1>
           <p class="text-surface-500">Please sign in to your account</p>
         </div>
-        <form action="" class="flex flex-col gap-5">
+        <form @submit.prevent="login" class="flex flex-col gap-5">
+          <Message
+            v-if="error"
+            severity="error"
+            class="mb-4"
+            :closable="false"
+            >{{ error }}</Message
+          >
           <div class="flex flex-col gap-2">
             <label for="email" class="font-medium text-surface-900"
               >Email <span class="text-red-500">*</span></label
@@ -53,7 +92,13 @@ const form = reactive({
               placeholder="Enter your password"
             />
           </div>
-          <Button type="submit" label="Login" fluid class="mt-2" />
+          <Button
+            type="submit"
+            label="Login"
+            fluid
+            class="mt-2"
+            :loading="loading"
+          />
         </form>
       </div>
     </div>
