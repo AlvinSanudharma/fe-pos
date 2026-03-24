@@ -1,11 +1,22 @@
 <script setup lang="ts">
+import router from "@/router";
 import { useAuthStore } from "@/stores/auth.store";
+import { Button, Dialog } from "primevue";
 import { ref } from "vue";
 import { useRoute } from "vue-router";
 
 const authStore = useAuthStore();
 const { user } = authStore;
 const route = useRoute();
+
+const logoutDialog = ref(false);
+
+const handleLogout = async () => {
+  await authStore.logout();
+  logoutDialog.value = false;
+
+  router.push({ name: "login" });
+};
 
 const menuItems = ref([
   {
@@ -62,7 +73,8 @@ const menuItems = ref([
     </div>
     <!-- User Profile -->
     <div class="p-4 border-t border-surface-200">
-      <div
+      <button
+        @click="logoutDialog = true"
         class="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-surface-50"
       >
         <div
@@ -81,7 +93,33 @@ const menuItems = ref([
         >
           <i class="pi pi-sign-out text-lg"></i>
         </div>
-      </div>
+      </button>
     </div>
   </div>
+
+  <Dialog
+    v-model:visible="logoutDialog"
+    header="Confirm Logout"
+    modal
+    :closable="false"
+    class="w-100"
+  >
+    <span class="text-surface-500 mb-8 block"
+      >Are you sure you want to logout?</span
+    >
+    <div class="flex justify-end gap-8">
+      <Button
+        type="button"
+        label="Cancel"
+        severity="secondary"
+        @click="logoutDialog = false"
+      ></Button>
+      <Button
+        type="button"
+        label="Logout"
+        severity="danger"
+        @click="handleLogout"
+      ></Button>
+    </div>
+  </Dialog>
 </template>
