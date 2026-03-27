@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Button } from "primevue";
+import { Button, DataTable } from "primevue";
 </script>
 
 <template>
@@ -17,6 +17,15 @@ import { Button } from "primevue";
       <Button as-child v-slot="slotProps">
         <RouterLink :to="{}" :class="slotProps.class">Add Category</RouterLink>
       </Button>
+    </div>
+    <div class="bg-white rounded-2xl border border-surface-200 p-2">
+      <DataTable
+        :columns="[]"
+        :value="[]"
+        data-key="id"
+        class="clean-table"
+        :row-hover="true"
+      />
     </div>
   </div>
 </template>
