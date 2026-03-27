@@ -1,6 +1,6 @@
 import api from "./axios";
 
-export const getProductCategories = async (params: {
+export const getCategories = async (params: {
   page?: number;
   search?: string;
   limit?: number;
