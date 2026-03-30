@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { useProductCategoryStore } from "@/stores/product-category.store";
 import { storeToRefs } from "pinia";
-import { Button, Column, DataTable } from "primevue";
+import { Button, Column, DataTable, Select } from "primevue";
 import { onMounted } from "vue";
 
 const productCategoryStore = useProductCategoryStore();
-const { fetch } = productCategoryStore;
-const { items, loading } = storeToRefs(productCategoryStore);
+const { fetch, setLimit } = productCategoryStore;
+const { items, loading, limit } = storeToRefs(productCategoryStore);
 
 onMounted(() => {
   fetch();
@@ -69,6 +69,18 @@ onMounted(() => {
           </template>
         </Column>
       </DataTable>
+      <div
+        class="flex justify-between items-center px-4 py-4 border-t border-surface-100 gap-4"
+      >
+        <div class="flex items-center gap-2">
+          <span class="text-sm text-surface-500"> Rows per page: </span>
+          <Select
+            :model-value="limit"
+            :options="[5, 10, 20, 50]"
+            @update:model-value="setLimit"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </template>

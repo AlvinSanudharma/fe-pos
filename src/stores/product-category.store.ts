@@ -36,5 +36,12 @@ export const useProductCategoryStore = defineStore("product-category", {
         this.loading = false;
       }
     },
+
+    setLimit(limit: number) {
+      this.limit = limit;
+      this.page = 1;
+
+      this.fetch();
+    },
   },
 });

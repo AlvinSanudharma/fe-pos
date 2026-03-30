@@ -59,7 +59,7 @@ const menuItems = ref([
     <div class="flex-1 flex-col gap-6 overflow-y-auto py-6 px-4">
       <div class="" v-for="(section, i) in menuItems" :key="i">
         <div
-          class="text-xs font-semibold text-surface-400 uppercase tracking-wider mb-3 px-3"
+          class="text-xs font-semibold text-surface-400 uppercase tracking-wider mb-3 px-3 py-2"
         >
           {{ section.label }}
         </div>
