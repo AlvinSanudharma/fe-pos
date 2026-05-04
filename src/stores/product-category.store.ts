@@ -6,8 +6,9 @@ export const useProductCategoryStore = defineStore("product-category", {
   state: () => ({
     items: [] as ProductCategory[],
     pagination: {
-      page: 1,
-      pageSize: 10,
+      current_page: 1,
+      last_page: 1,
+      per_page: 10,
       total: 0,
       from: 0,
       to: 0,
@@ -17,6 +18,14 @@ export const useProductCategoryStore = defineStore("product-category", {
     search: "",
     loading: false,
   }),
+  getters: {
+    currentPage(state) {
+      return state.pagination.current_page;
+    },
+    totalPages(state) {
+      return state.pagination.last_page;
+    },
+  },
   actions: {
     async fetch() {
       this.loading = true;
@@ -36,12 +45,27 @@ export const useProductCategoryStore = defineStore("product-category", {
         this.loading = false;
       }
     },
-
+    setPage(page: number) {
+      this.page = page;
+      this.fetch();
+    },
     setLimit(limit: number) {
       this.limit = limit;
       this.page = 1;
 
       this.fetch();
+    },
+    nextPage() {
+      if (this.pagination.current_page < this.pagination.last_page) {
+        this.page = this.pagination.current_page + 1;
+        this.fetch();
+      }
+    },
+    prevPage() {
+      if (this.pagination.current_page > 1) {
+        this.page = this.pagination.current_page - 1;
+        this.fetch();
+      }
     },
   },
 });
