@@ -1,15 +1,21 @@
 <script setup lang="ts">
+import { deleteCategory } from "@/api/product-categories.api";
 import { useProductCategoryStore } from "@/stores/product-category.store";
+import type { ProductCategory } from "@/types/product-categories";
 import { useDebounceFn } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 import {
   Button,
   Column,
+  ConfirmDialog,
   DataTable,
   IconField,
   InputIcon,
   InputText,
   Select,
+  Toast,
+  useConfirm,
+  useToast,
 } from "primevue";
 import { onMounted } from "vue";
 
@@ -17,10 +23,51 @@ const productCategoryStore = useProductCategoryStore();
 const { fetch, setLimit, setPage, nextPage, prevPage } = productCategoryStore;
 const { items, loading, limit, totalPages, currentPage, search } =
   storeToRefs(productCategoryStore);
+const confirm = useConfirm();
+const toast = useToast();
 
 const onSearch = useDebounceFn(() => {
   setPage(1);
 }, 400);
+
+const confirmDelete = (id: number) => {
+  confirm.require({
+    message: "Are you sure you want to delete this category?",
+    header: "Confirm Deletion",
+    icon: "pi pi-exclamation-triangle",
+
+    rejectProps: {
+      label: "Cancel",
+      severity: "secondary",
+      outlined: true,
+    },
+    acceptProps: {
+      label: "Delete",
+      severity: "danger",
+    },
+    accept: async () => {
+      try {
+        await deleteCategory(id);
+
+        toast.add({
+          severity: "success",
+          summary: "Category Deleted",
+          detail: `The category has been successfully deleted.`,
+          life: 1000,
+        });
+
+        fetch();
+      } catch (error) {
+        toast.add({
+          severity: "error",
+          summary: "Deletion Failed",
+          detail: `Failed to delete category. Please try again.`,
+          life: 1000,
+        });
+      }
+    },
+  });
+};
 
 onMounted(() => {
   fetch();
@@ -61,7 +108,7 @@ onMounted(() => {
         :row-hover="true"
       >
         <Column field="name" header="Name" class="min-w-[16rem]">
-          <template #body="{ data }">
+          <template #body="{ data }: { data: ProductCategory }">
             <div class="flex items-center gap-3">
               <div class="relative" v-if="data.image !== null">
                 <img
@@ -78,7 +125,7 @@ onMounted(() => {
         </Column>
         <Column field="description" header="Description" />
         <Column header="Actions" style="width: 5rem">
-          <template #body="{ data }">
+          <template #body="{ data }: { data: ProductCategory }">
             <div class="flex items-center gap-2">
               <Button
                 icon="pi pi-trash"
@@ -86,6 +133,7 @@ onMounted(() => {
                 rounded
                 severity="danger"
                 class="w-9! h-9! border-surface-200! text-surface-200! hover:text-red-600! hover:border-red-600! bg-white hover:bg-primary-50"
+                @click="confirmDelete(data.id)"
               ></Button>
             </div>
           </template>
@@ -130,4 +178,6 @@ onMounted(() => {
       </div>
     </div>
   </div>
+  <ConfirmDialog />
+  <Toast />
 </template>

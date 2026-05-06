@@ -2,6 +2,8 @@ import { createApp } from "vue";
 import PrimeVue from "primevue/config";
 import Aura from "@primeuix/themes/aura";
 import { createPinia } from "pinia";
+import ConfirmationService from "primevue/confirmationservice";
+import ToastService from "primevue/toastservice";
 
 import App from "./App.vue";
 import router from "./router";
@@ -12,6 +14,8 @@ const app = createApp(App);
 
 app.use(createPinia());
 app.use(router);
+app.use(ConfirmationService);
+app.use(ToastService);
 
 const FlashPreset = definePreset(Aura, {
   semantic: {

@@ -5,3 +5,6 @@ export const getCategories = async (params: {
   search?: string;
   limit?: number;
 }) => api.get("/product-categories", { params });
+
+export const deleteCategory = async (id: number) =>
+  api.delete(`/product-categories/${id}`);
