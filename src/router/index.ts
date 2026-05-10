@@ -1,6 +1,7 @@
 import AppLayout from "@/layout/AppLayout.vue";
 import Login from "@/pages/auth/Login.vue";
 import Dashboard from "@/pages/Dashboard.vue";
+import CategoryForm from "@/pages/product-categories/CategoryForm.vue";
 import CategoryList from "@/pages/product-categories/CategoryList.vue";
 import { useAuthStore } from "@/stores/auth.store";
 import { createRouter, createWebHistory } from "vue-router";
@@ -26,8 +27,18 @@ const router = createRouter({
         },
         {
           path: "/product-categories",
-          name: "Product-categories",
+          name: "product-categories",
           component: CategoryList,
+        },
+        {
+          path: "/product-categories/create",
+          name: "product-categories-create",
+          component: CategoryForm,
+        },
+        {
+          path: "/product-categories/:id/edit",
+          name: "product-categories-edit",
+          component: CategoryForm,
         },
       ],
     },
@@ -50,7 +61,6 @@ router.beforeEach(async (to, from, next) => {
   if (to.meta.requiresAuth && !auth.isAuthenticated) {
     return next("/login");
   }
-  console.log(to.meta.guest, auth.isAuthenticated);
   if (to.meta.guest && auth.isAuthenticated) {
     return next("/");
   }
