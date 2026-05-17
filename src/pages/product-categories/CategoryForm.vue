@@ -57,7 +57,7 @@ const submit = async () => {
     });
 
     setTimeout(() => {
-      router.push("/product-categories");
+      router.back();
     }, 1000);
   } catch (error: any) {
     if (error.response?.status === 422) {
@@ -158,17 +158,17 @@ const submit = async () => {
                 placeholder="Enter category name"
                 :invalid="!!errors.name"
               />
+              <Message
+                v-if="errors.name"
+                severity="error"
+                size="small"
+                variant="simple"
+                >{{ errors.name[0] }}</Message
+              >
             </div>
-            <Message
-              v-if="errors.name"
-              severity="error"
-              size="small"
-              variant="simple"
-              >{{ errors.name[0] }}</Message
-            >
             <div class="flex flex-col gap-2">
               <label for="email" class="font-medium text-surface-900"
-                >Description <span class="text-red-500">*</span></label
+                >Description</label
               >
               <Textarea
                 type="text"
